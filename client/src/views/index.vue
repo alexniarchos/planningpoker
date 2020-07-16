@@ -19,7 +19,7 @@
       <button
         class="room__copy"
       >
-        <img src="~assets/copy.svg" alt="copy"/>
+        <img src="../assets/copy.svg" alt="copy"/>
       </button>
     </div>
     <input
@@ -37,7 +37,7 @@
         :style="userIconStyle(index)"
       >
         <div class="user__name" :style="userNameStyle(index)">
-          {{user.name}}
+          {{getUserInitials(user.name)}}
         </div>
         <div v-if="user.hasVoted" class="user__card">
           <div class="user__card-number">

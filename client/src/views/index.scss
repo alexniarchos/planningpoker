@@ -1,6 +1,7 @@
 body {
   background: rgb(73, 73, 73);
   overflow: hidden;
+  font-family: 'lato', sans-serif;
 }
 
 .username {
@@ -132,6 +133,8 @@ $user-size: 80px;
   position: absolute;
   top: calc(50% - #{$user-size}/2);
   left: calc(50% - #{$user-size}/2);
+  font-size: 32px;
+  font-weight: bold;
   background: rgb(146, 146, 146);
   // transform: rotate(180deg) translateY($table-size/2 + $user-size/2 + 30px);
   transition: transform 1s;
@@ -139,13 +142,13 @@ $user-size: 80px;
   &--self {
     border: 4px solid black;
     .user__name {
-      top: 26px;
+      top: 19px;
     }
   }
 
   &__name {
     position: relative;
-    top: 32px;
+    top: 19px;
     right: 0;
     text-align: center;
   }

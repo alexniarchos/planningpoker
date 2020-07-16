@@ -1,5 +1,7 @@
-import socket from '~/plugins/socket.io'
-import {generateId, generateName} from '~/utils/random';
+import io from 'socket.io-client';
+import { generateId, generateName } from '../utils/random';
+
+const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`);
 
 export default {
   mounted() {
@@ -12,19 +14,19 @@ export default {
       user: {
         room: this.roomId,
         name: this.userName
-      }
+      },
     });
 
-    socket.on('roomMessage', message => {
+    socket.on('roomMessage', (message) => {
       this.chatMessages.push(message);
     });
 
-    socket.on('roomUsers', data => {
+    socket.on('roomUsers', (data) => {
       this.users = data.users;
     });
 
-    socket.on('roomRevealVotes', userVotes => {
-      userVotes.forEach(userVote => {
+    socket.on('roomRevealVotes', (userVotes) => {
+      userVotes.forEach((userVote) => {
         this.setUserById(userVote.id, {
           vote: userVote.vote
         });
@@ -33,7 +35,7 @@ export default {
     });
 
     socket.on('roomClearVotes', () => {
-      this.users.forEach(user => {
+      this.users.forEach((user) => {
         this.setUserById(user.id, {
           vote: null,
           hasVoted: false
@@ -43,34 +45,34 @@ export default {
       this.selectedCardIndex = null;
     });
 
-    socket.on('roomVoteHidden', ({hasVoted, senderId}) => {
+    socket.on('roomVoteHidden', ({ hasVoted, senderId }) => {
       this.setUserById(senderId, {
         hasVoted
       });
     });
 
-    socket.on('roomVote', ({hasVoted, senderId}) => {
+    socket.on('roomVote', ({ hasVoted, senderId }) => {
       this.setUserById(senderId, {
         hasVoted
       });
     });
 
-    socket.on('roomShowVotes', users => {
-      users.forEach(user => {
+    socket.on('roomShowVotes', (users) => {
+      users.forEach((user) => {
         if (!this.getUserById(user.id)) {
           return;
         }
-        this.setUserById(user.id, {vote: user.vote});
-      })
+        this.setUserById(user.id, { vote: user.vote });
+      });
     });
 
-    socket.on('roomChangeUserName', user => {
+    socket.on('roomChangeUserName', (user) => {
       this.setUserById(user.id, {
         name: user.name
       });
-    })
+    });
   },
-  data () {
+  data() {
     return {
       users: [],
       roomId: 123,
@@ -82,14 +84,14 @@ export default {
       chatInput: '',
       chatMessages: [],
       revealVotes: false
-    }
+    };
   },
   methods: {
-    userIconStyle (index) {
-      return `transform: rotate(${180 + index * 360 / this.users.length}deg) translateY(210px)`
+    userIconStyle(index) {
+      return `transform: rotate(${180 + (index * 360) / this.users.length}deg) translateY(210px)`;
     },
     userNameStyle(index) {
-      return `transform: rotate(${180 - index * 360 / this.users.length}deg)`
+      return `transform: rotate(${180 - (index * 360) / this.users.length}deg)`;
     },
     selectCard(index) {
       if (this.selectedCardIndex === index) {
@@ -115,10 +117,10 @@ export default {
       this.chatInput = '';
     },
     getUserById(id) {
-      return this.users.find(user => user.id === id);
+      return this.users.find((user) => user.id === id);
     },
     getUserIndexById(id) {
-      return this.users.findIndex(user => user.id === id);
+      return this.users.findIndex((user) => user.id === id);
     },
     setUserById(id, user) {
       const userIndex = this.getUserIndexById(id);
@@ -139,33 +141,44 @@ export default {
       socket.emit('joinRoom', {
         user: {
           room: this.roomId,
-          name: 'alex'
-        }
+          name: this.userName
+        },
       });
     },
     onUserNameChange() {
+      if (this.newUserName === '') {
+        this.newUserName = this.userName;
+        return;
+      }
+
       this.userName = this.newUserName;
       socket.emit('changeName', this.userName);
     },
+    getUserInitials(name) {
+      const nameSplit = name.toUpperCase().split(' ');
+      const firstInitial = (nameSplit[0] && nameSplit[0].charAt(0)) || '';
+      const secondInitial = (nameSplit[1] && nameSplit[1].charAt(0)) || '';
+      return `${firstInitial}${secondInitial}`;
+    }
   },
   computed: {
     userId() {
       return socket.id;
     },
     showRevealButton() {
-      if(this.revealVotes) {
+      if (this.revealVotes) {
         return true;
       }
-      return this.users.some(user => user.hasVoted);
+      return this.users.some((user) => user.hasVoted);
     },
     revealText() {
       return this.revealVotes ? 'Clear' : 'Reveal';
     },
     roomIdStyle() {
-      return `width: ${this.newRoomId.length*12}px`;
+      return `width: ${this.newRoomId.length * 12}px`;
     },
     userNameWidth() {
-      return `width: ${this.newUserName.length*12}px`;
-    }
-  }
-}
+      return `width: ${this.newUserName.length * 12}px`;
+    },
+  },
+};
