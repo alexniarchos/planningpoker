@@ -1,7 +1,8 @@
 import io from 'socket.io-client';
-import { generateId, generateName } from '../utils/random';
+import {generateId, generateName} from '../utils/random';
 
 const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`);
+const TABLE_RADIUS = 150;
 
 export default {
   mounted() {
@@ -13,7 +14,7 @@ export default {
     socket.emit('joinRoom', {
       user: {
         room: this.roomId,
-        name: this.userName
+        name: this.userName,
       },
     });
 
@@ -28,7 +29,7 @@ export default {
     socket.on('roomRevealVotes', (userVotes) => {
       userVotes.forEach((userVote) => {
         this.setUserById(userVote.id, {
-          vote: userVote.vote
+          vote: userVote.vote,
         });
       });
       this.revealVotes = true;
@@ -38,22 +39,22 @@ export default {
       this.users.forEach((user) => {
         this.setUserById(user.id, {
           vote: null,
-          hasVoted: false
+          hasVoted: false,
         });
       });
       this.revealVotes = false;
       this.selectedCardIndex = null;
     });
 
-    socket.on('roomVoteHidden', ({ hasVoted, senderId }) => {
+    socket.on('roomVoteHidden', ({hasVoted, senderId}) => {
       this.setUserById(senderId, {
-        hasVoted
+        hasVoted,
       });
     });
 
-    socket.on('roomVote', ({ hasVoted, senderId }) => {
+    socket.on('roomVote', ({hasVoted, senderId}) => {
       this.setUserById(senderId, {
-        hasVoted
+        hasVoted,
       });
     });
 
@@ -62,13 +63,13 @@ export default {
         if (!this.getUserById(user.id)) {
           return;
         }
-        this.setUserById(user.id, { vote: user.vote });
+        this.setUserById(user.id, {vote: user.vote});
       });
     });
 
     socket.on('roomChangeUserName', (user) => {
       this.setUserById(user.id, {
-        name: user.name
+        name: user.name,
       });
     });
   },
@@ -83,28 +84,34 @@ export default {
       selectedCardIndex: null,
       chatInput: '',
       chatMessages: [],
-      revealVotes: false
+      revealVotes: false,
     };
   },
   methods: {
     userIconStyle(index) {
-      return `transform: rotate(${180 + (index * 360) / this.users.length}deg) translateY(210px)`;
+      debugger;
+      const x =
+        TABLE_RADIUS * Math.sin((180 + index * (360 / this.users.length)) * (Math.PI / 180));
+      const y =
+        TABLE_RADIUS * Math.cos((180 + index * (360 / this.users.length)) * (Math.PI / 180));
+      console.log(x, y);
+      return `transform: translateX(${x}px) translateY(${y}px)`;
     },
-    userNameStyle(index) {
-      return `transform: rotate(${180 - (index * 360) / this.users.length}deg)`;
+    userNameStyle() {
+      // return `transform: rotate(${180 - (index * 360) / this.users.length}deg)`;
     },
     selectCard(index) {
       if (this.selectedCardIndex === index) {
         this.selectedCardIndex = null;
         socket.emit('vote', {
-          vote: this.selectedCardIndex
+          vote: this.selectedCardIndex,
         });
         return;
       }
 
       this.selectedCardIndex = index;
       socket.emit('vote', {
-        vote: this.selectedCardIndex
+        vote: this.selectedCardIndex,
       });
     },
     onSendClick() {
@@ -112,7 +119,7 @@ export default {
         return;
       }
       socket.emit('message', {
-        message: this.chatInput
+        message: this.chatInput,
       });
       this.chatInput = '';
     },
@@ -126,7 +133,7 @@ export default {
       const userIndex = this.getUserIndexById(id);
       this.$set(this.users, userIndex, {
         ...this.users[userIndex],
-        ...user
+        ...user,
       });
     },
     onRevealClick() {
@@ -141,7 +148,7 @@ export default {
       socket.emit('joinRoom', {
         user: {
           room: this.roomId,
-          name: this.userName
+          name: this.userName,
         },
       });
     },
@@ -159,7 +166,7 @@ export default {
       const firstInitial = (nameSplit[0] && nameSplit[0].charAt(0)) || '';
       const secondInitial = (nameSplit[1] && nameSplit[1].charAt(0)) || '';
       return `${firstInitial}${secondInitial}`;
-    }
+    },
   },
   computed: {
     userId() {
