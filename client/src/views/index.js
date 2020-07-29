@@ -2,11 +2,11 @@ import io from 'socket.io-client';
 import {generateId, generateName} from '../utils/random';
 
 const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`);
-const TABLE_RADIUS = 150;
+const TABLE_RADIUS = 210;
 
 export default {
   mounted() {
-    this.roomId = generateId(8);
+    this.roomId = this.$route.params.roomId || generateId(8);
     this.newRoomId = this.roomId;
 
     this.userName = generateName();
@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       users: [],
-      roomId: 123,
+      roomId: 0,
       newRoomId: '',
       userName: '',
       newUserName: '',
@@ -89,16 +89,20 @@ export default {
   },
   methods: {
     userIconStyle(index) {
-      debugger;
       const x =
         TABLE_RADIUS * Math.sin((180 + index * (360 / this.users.length)) * (Math.PI / 180));
       const y =
         TABLE_RADIUS * Math.cos((180 + index * (360 / this.users.length)) * (Math.PI / 180));
-      console.log(x, y);
+      // console.log(x, y);
       return `transform: translateX(${x}px) translateY(${y}px)`;
     },
     userNameStyle() {
       // return `transform: rotate(${180 - (index * 360) / this.users.length}deg)`;
+    },
+    cardStyle(index) {
+      const deg = index * (360 / this.users.length) - 180;
+      console.log(index, this.users.length, deg);
+      return `transform: rotate(${deg}deg)`;
     },
     selectCard(index) {
       if (this.selectedCardIndex === index) {
@@ -145,6 +149,7 @@ export default {
     },
     onRoomChange() {
       this.roomId = this.newRoomId;
+      window.location = `/${this.roomId}`;
       socket.emit('joinRoom', {
         user: {
           room: this.roomId,
@@ -166,7 +171,7 @@ export default {
       const firstInitial = (nameSplit[0] && nameSplit[0].charAt(0)) || '';
       const secondInitial = (nameSplit[1] && nameSplit[1].charAt(0)) || '';
       return `${firstInitial}${secondInitial}`;
-    },
+    }
   },
   computed: {
     userId() {
@@ -186,6 +191,6 @@ export default {
     },
     userNameWidth() {
       return `width: ${this.newUserName.length * 12}px`;
-    },
+    }
   },
 };

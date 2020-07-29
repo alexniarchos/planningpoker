@@ -39,10 +39,13 @@
         <div class="user__name" :style="userNameStyle(index)">
           {{getUserInitials(user.name)}}
         </div>
-        <div v-if="user.hasVoted" class="user__card">
+        <div v-if="user.hasVoted" class="user__card" :style="cardStyle(index)">
           <div class="user__card-number">
             {{cards[user.vote] || ''}}
           </div>
+        </div>
+        <div class="user__tooltip">
+          {{user.name}}
         </div>
       </div>
       <button v-if="showRevealButton" @click="onRevealClick()" class="table__cta">

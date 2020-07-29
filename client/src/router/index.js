@@ -6,9 +6,13 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '*',
+    path: '/:roomId',
     component: Index,
   },
+  {
+    path: '*',
+    component: Index
+  }
 ];
 
 const router = new VueRouter({
