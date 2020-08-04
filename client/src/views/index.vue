@@ -36,22 +36,25 @@
         :key="user.id"
         :style="userIconStyle(index)"
       >
-        <div class="user__name" :style="userNameStyle(index)">
+        <div class="user__name">
           {{getUserInitials(user.name)}}
-        </div>
-        <div v-if="user.hasVoted" class="user__card" :style="cardStyle(index)">
-          <div class="user__card-number">
-            {{cards[user.vote] || ''}}
-          </div>
         </div>
         <div class="user__tooltip">
           {{user.name}}
+        </div>
+      </div>
+      <div class="user__table-cards">
+        <div v-for="user in usersHaveVoted" class="user__card" :style="cardStyle(user)" :key="`${user.id}-card`">
+          <div class="user__card-number">
+            {{cards[user.vote] || ''}}
+          </div>
         </div>
       </div>
       <button v-if="showRevealButton" @click="onRevealClick()" class="table__cta">
         {{revealText}}
       </button>
     </div>
+    
     <div class="cards">
       <div
         v-for="(card, index) in cards"

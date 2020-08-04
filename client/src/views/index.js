@@ -89,20 +89,15 @@ export default {
   },
   methods: {
     userIconStyle(index) {
-      const x =
-        TABLE_RADIUS * Math.sin((180 + index * (360 / this.users.length)) * (Math.PI / 180));
-      const y =
-        TABLE_RADIUS * Math.cos((180 + index * (360 / this.users.length)) * (Math.PI / 180));
-      // console.log(x, y);
+      const deg = (index * (360 / this.users.length)) * Math.PI/180;
+      const x = -1 * TABLE_RADIUS * Math.sin(deg);
+      const y = TABLE_RADIUS * Math.cos(deg);
       return `transform: translateX(${x}px) translateY(${y}px)`;
     },
-    userNameStyle() {
-      // return `transform: rotate(${180 - (index * 360) / this.users.length}deg)`;
-    },
-    cardStyle(index) {
-      const deg = index * (360 / this.users.length) - 180;
-      console.log(index, this.users.length, deg);
-      return `transform: rotate(${deg}deg)`;
+    cardStyle(user) {
+      const index = this.users.findIndex(u => u.id === user.id);
+      const deg = index * (360 / this.users.length);
+      return `transform: rotate(${deg}deg) translateY(100px)`;
     },
     selectCard(index) {
       if (this.selectedCardIndex === index) {
@@ -191,6 +186,9 @@ export default {
     },
     userNameWidth() {
       return `width: ${this.newUserName.length * 12}px`;
+    },
+    usersHaveVoted() {
+      return this.users.filter(user => user.hasVoted);
     }
   },
 };

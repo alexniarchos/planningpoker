@@ -1,1 +1,1 @@
-# planningpoker
+Make planning great again :)
