@@ -8,6 +8,9 @@ export default {
   mounted() {
     this.roomId = this.$route.params.roomId || generateId(8);
     this.newRoomId = this.roomId;
+    if(!this.$route.params.roomId){
+      window.location = `/${this.roomId}`;
+    }
 
     this.userName = generateName();
     this.newUserName = this.userName;
@@ -33,6 +36,8 @@ export default {
         });
       });
       this.revealVotes = true;
+
+      this.cardsVisible = false;
     });
 
     socket.on('roomClearVotes', () => {
@@ -44,6 +49,7 @@ export default {
       });
       this.revealVotes = false;
       this.selectedCardIndex = null;
+      this.cardsVisible = true;
     });
 
     socket.on('roomVoteHidden', ({hasVoted, senderId}) => {
@@ -85,6 +91,7 @@ export default {
       chatInput: '',
       chatMessages: [],
       revealVotes: false,
+      cardsVisible: true
     };
   },
   methods: {

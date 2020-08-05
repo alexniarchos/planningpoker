@@ -54,19 +54,21 @@
         {{revealText}}
       </button>
     </div>
-    
-    <div class="cards">
-      <div
-        v-for="(card, index) in cards"
-        @click="selectCard(index)"
-        :class="['card', {'card--selected': selectedCardIndex === index}]"
-        :key="index"
-      >
-        <div class="card__number">
-          {{card}}
+    <transition name="slide-fade">
+      <div v-if="cardsVisible" class="cards">
+        <div
+          v-for="(card, index) in cards"
+          @click="selectCard(index)"
+          :class="['card', {'card--selected': selectedCardIndex === index}]"
+          :key="index"
+        >
+          <div class="card__number">
+            {{card}}
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
+
     <!-- <div class="chat">
       <div class="chat__messages">
         <div
