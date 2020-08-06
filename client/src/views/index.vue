@@ -30,11 +30,20 @@
       :style="userNameWidth"
     />
     <div class="table">
+      <div class="user__table-cards">
+        <transition-group name="slide-card">
+          <div v-for="user in usersHaveVoted" class="user__card" :style="cardStyle(user)" :key="`${user.id}-card`">
+            <div class="user__card-number">
+              {{cards[user.vote] || ''}}
+            </div>
+          </div>
+        </transition-group>
+      </div>
       <div
         v-for="(user, index) in users"
         :class="['user', {'user--self': userId === user.id}]"
         :key="user.id"
-        :style="userIconStyle(index)"
+        :style="userIconStyle(user, index)"
       >
         <div class="user__name">
           {{getUserInitials(user.name)}}
@@ -43,26 +52,19 @@
           {{user.name}}
         </div>
       </div>
-      <div class="user__table-cards">
-        <div v-for="user in usersHaveVoted" class="user__card" :style="cardStyle(user)" :key="`${user.id}-card`">
-          <div class="user__card-number">
-            {{cards[user.vote] || ''}}
-          </div>
-        </div>
-      </div>
       <button v-if="showRevealButton" @click="onRevealClick()" class="table__cta">
         {{revealText}}
       </button>
     </div>
     <transition name="slide-fade">
-      <div v-if="cardsVisible" class="cards">
+      <div v-if="cardsVisible" class="cards-deck">
         <div
           v-for="(card, index) in cards"
           @click="selectCard(index)"
-          :class="['card', {'card--selected': selectedCardIndex === index}]"
+          :class="['cards-deck__card', {'cards-deck__card--selected': selectedCardIndex === index}]"
           :key="index"
         >
-          <div class="card__number">
+          <div class="cards-deck__card-number">
             {{card}}
           </div>
         </div>

@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
 import {generateId, generateName} from '../utils/random';
+import {getRandomColor} from '../utils/colors';
 
 const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`);
 const TABLE_RADIUS = 210;
@@ -18,9 +19,9 @@ export default {
       user: {
         room: this.roomId,
         name: this.userName,
-      },
+        color: getRandomColor()
+      }
     });
-
     socket.on('roomMessage', (message) => {
       this.chatMessages.push(message);
     });
@@ -32,7 +33,7 @@ export default {
     socket.on('roomRevealVotes', (userVotes) => {
       userVotes.forEach((userVote) => {
         this.setUserById(userVote.id, {
-          vote: userVote.vote,
+          vote: userVote.vote
         });
       });
       this.revealVotes = true;
@@ -95,11 +96,13 @@ export default {
     };
   },
   methods: {
-    userIconStyle(index) {
+    userIconStyle(user, index) {
       const deg = (index * (360 / this.users.length)) * Math.PI/180;
       const x = -1 * TABLE_RADIUS * Math.sin(deg);
       const y = TABLE_RADIUS * Math.cos(deg);
-      return `transform: translateX(${x}px) translateY(${y}px)`;
+      return `transform: translateX(${x}px) translateY(${y}px); 
+              background-color: ${user.color};
+              border-color: ${user.color}`;
     },
     cardStyle(user) {
       const index = this.users.findIndex(u => u.id === user.id);

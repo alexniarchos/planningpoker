@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const dotenv = require('dotenv');
 const {
   userJoin,
   getUser,
@@ -9,21 +10,13 @@ const {
   getRoomUsers,
   getAllUsers
 } = require('./users');
-
 const {getRoom, setRoom, rooms} = require('./rooms');
-// const bodyParser = require('body-parser');
-// app.use(cors());
-// app.use(bodyParser.json())
-// app.listen(process.env.PORT);
 
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const dotenv = require('dotenv');
 dotenv.config();
+app.use(cors());
 
-http.listen(process.env.SOCKET_PORT, () => {
-  console.log(`Planning poker server started on port: ${process.env.SOCKET_PORT}`);
-});
+const server = app.listen(process.env.SOCKET_PORT);
+const io = require('socket.io').listen(server);
 
 setInterval(() => {
   console.log('\nusers', getAllUsers());
@@ -32,12 +25,13 @@ setInterval(() => {
 
 io.on('connection', socket => {
   socket.on('joinRoom', ({user}) => {
+    console.log(user);
     if (getUser(socket.id)) {
       userLeave(socket.id)
     }
     console.log(`${user.name} joined room ${user.room}`);
     socket.join(user.room);
-    userJoin(socket.id, user.name, user.room);
+    userJoin(socket.id, user);
 
     const room = getRoom(user.room);
     let roomUsers;

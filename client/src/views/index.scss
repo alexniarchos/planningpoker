@@ -13,6 +13,15 @@ body {
   transform: translateY(100px);
 }
 
+.slide-card-enter-active, .slide-card-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+.slide-card-enter, .slide-card-leave-to {
+  opacity: 0;
+  transform: translateY(120px) !important;
+}
+
 .username {
   position: absolute;
   display: flex;
@@ -123,12 +132,29 @@ $table-size: 300px;
   margin: auto;
   border-radius: 50%;
   background: rgb(56, 56, 56);
+  box-shadow: 0 0 12px 0 #383838;
+  top: -100px;
 
   &__cta {
     position: absolute;
-    left: 105px;
-    top: 130px;
-    font-size: 24px;
+    width: 80px;
+    height: 80px;
+    left: calc(50% - 40px);
+    top: calc(50% - 40px);
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    outline: none;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0.6;
+    transition: box-shadow 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.5);
+      opacity: 1;
+    }
   }
 }
 
@@ -143,13 +169,13 @@ $user-size: 80px;
   left: calc(50% - #{$user-size + 8}/2);
   font-size: 32px;
   font-weight: bold;
-  background: rgb(146, 146, 146);
-  border: 4px solid rgb(146, 146, 146);
+  background: white;
+  border: 4px solid white;
   transition: transform 1s;
   cursor: default;
 
   &--self {
-    border-color:black;
+    border-color:white !important;
     .user__name {
       top: 22px;
     }
@@ -167,6 +193,7 @@ $user-size: 80px;
     top: 22px;
     right: 0;
     text-align: center;
+    color: white;
   }
 
   &__tooltip {
@@ -184,6 +211,7 @@ $user-size: 80px;
     font-size: 16px;
     font-weight: normal;
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 999999;
 
     &:before {
       content: '';
@@ -203,14 +231,15 @@ $user-size: 80px;
     justify-content: center;
     align-items: center;
     width: 48px;
+    height: 64px;
     top: 121px;
     right: 126px;
-    height: 60px;
     background-color: white;
     border-radius: 8px;
+    box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.5);
 
     &-number {
-      font-size: 24px;
+      font-size: 32px;
     }
   }
 
@@ -221,7 +250,7 @@ $user-size: 80px;
   }
 }
 
-.cards {
+.cards-deck {
   position: absolute;
   width: 100%;
   bottom: -70px;
@@ -233,36 +262,43 @@ $user-size: 80px;
   &:hover {
     transform: translateY(-70px);
   }
+
+  &__card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 96px;
+    border-radius: 8px;
+    border: 4px solid white;
+    background-color: white;
+    box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.6;
+
+    &:hover {
+      transform: translateY(-20px);
+      opacity: 1;
+    }
+  
+    &+& {
+      margin-left: 16px;
+    }
+  
+    &-number {
+      font-size: 48px;
+    }
+  
+    &--selected {
+      transform: translateY(-20px);
+      border-color: black;
+      opacity: 1;
+    }
+  }
 }
 
-.card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 120px;
-  border-radius: 8px;
-  background-color: indianred;
-  cursor: pointer;
-  transition: transform 0.3s ease;
 
-  &:hover {
-    transform: translateY(-20px);
-  }
-
-  &+& {
-    margin-left: 24px;
-  }
-
-  &__number {
-    font-size: 48px;
-  }
-
-  &--selected {
-    transform: translateY(-20px);
-    border: 4px solid black;
-  }
-}
 
 .chat {
   position: absolute;

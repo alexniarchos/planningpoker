@@ -3,10 +3,11 @@ const {setRoom, getRoom, getRoomIndex, rooms} = require('./rooms');
 const users = [];
 
 // Join user to chat
-function userJoin(id, name, room) {
-  const user = { id, name, room };
+function userJoin(id, user) {
+  const userWithId = {id, ...user};
+  const {room} = user; 
 
-  users.push(user);
+  users.push(userWithId);
   if (!getRoom(room)) {
     setRoom(room, {
       id: room,
