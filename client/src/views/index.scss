@@ -22,6 +22,14 @@ body {
   transform: translateY(120px) !important;
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 .username {
   position: absolute;
   display: flex;
@@ -200,7 +208,7 @@ $user-size: 80px;
     opacity: 0;
     visibility: hidden;
     position: relative;
-    top: -83px;
+    top: -88px;
     left: 16px;
     padding: 8px;
     width: fit-content;

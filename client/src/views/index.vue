@@ -33,9 +33,11 @@
       <div class="user__table-cards">
         <transition-group name="slide-card">
           <div v-for="user in usersHaveVoted" class="user__card" :style="cardStyle(user)" :key="`${user.id}-card`">
-            <div class="user__card-number">
-              {{cards[user.vote] || ''}}
-            </div>
+            <transition name="fade">
+              <div v-if="user.vote" class="user__card-number">
+                {{cards[user.vote]}}
+              </div>
+            </transition>
           </div>
         </transition-group>
       </div>
