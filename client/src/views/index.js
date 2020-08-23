@@ -1,27 +1,33 @@
 import io from 'socket.io-client';
-import {generateId, generateName} from '../utils/random';
-import {getRandomColor} from '../utils/colors';
+import {mapState} from 'vuex';
+import WelcomePopup from '../components/WelcomePopup/WelcomePopup.vue';
 
 const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`);
 const TABLE_RADIUS = 210;
 
 export default {
+  components: {
+    WelcomePopup
+  },
+  data() {
+    return {
+      users: [],
+      newRoomId: '',
+      newUserName: '',
+      cards: [1, 2, 3, 5, 8, 13],
+      selectedCardIndex: null,
+      chatInput: '',
+      chatMessages: [],
+      revealVotes: false,
+      cardsVisible: true
+    };
+  },
   mounted() {
-    this.roomId = this.$route.params.roomId || generateId(8);
-    this.newRoomId = this.roomId;
-    if(!this.$route.params.roomId){
-      window.location = `/${this.roomId}`;
-    }
+    this.$store.commit('setSocket', socket);
+    this.$store.commit('setRoomId', this.$route.params.roomId || '');
+    localStorage.setItem('roomId', this.$route.params.roomId || '')
+    this.$store.commit('setName', localStorage.getItem('name') || '');
 
-    this.userName = generateName();
-    this.newUserName = this.userName;
-    socket.emit('joinRoom', {
-      user: {
-        room: this.roomId,
-        name: this.userName,
-        color: getRandomColor()
-      }
-    });
     socket.on('roomMessage', (message) => {
       this.chatMessages.push(message);
     });
@@ -80,27 +86,12 @@ export default {
       });
     });
   },
-  data() {
-    return {
-      users: [],
-      roomId: 0,
-      newRoomId: '',
-      userName: '',
-      newUserName: '',
-      cards: [1, 2, 3, 5, 8, 13],
-      selectedCardIndex: null,
-      chatInput: '',
-      chatMessages: [],
-      revealVotes: false,
-      cardsVisible: true
-    };
-  },
   methods: {
     userIconStyle(user, index) {
       const deg = (index * (360 / this.users.length)) * Math.PI/180;
       const x = -1 * TABLE_RADIUS * Math.sin(deg);
       const y = TABLE_RADIUS * Math.cos(deg);
-      return `transform: translateX(${x}px) translateY(${y}px); 
+      return `transform: translateX(${x}px) translateY(${y}px);
               background-color: ${user.color};
               border-color: ${user.color}`;
     },
@@ -153,7 +144,7 @@ export default {
       socket.emit('clearVotes');
     },
     onRoomChange() {
-      this.roomId = this.newRoomId;
+      this.$store.commit('setRoomId', this.newRoomId);
       window.location = `/${this.roomId}`;
       socket.emit('joinRoom', {
         user: {
@@ -170,6 +161,8 @@ export default {
 
       this.userName = this.newUserName;
       socket.emit('changeName', this.userName);
+      this.$store.commit('setName', this.userName);
+      localStorage.setItem('name', this.userName);
     },
     getUserInitials(name) {
       const nameSplit = name.toUpperCase().split(' ');
@@ -179,6 +172,10 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      name: state => state.name,
+      roomId: state => state.roomId
+    }),
     userId() {
       return socket.id;
     },
@@ -201,4 +198,12 @@ export default {
       return this.users.filter(user => user.hasVoted);
     }
   },
+  watch: {
+    name(val) {
+      this.newUserName = val;
+    },
+    roomId(val) {
+      this.newRoomId = val;
+    }
+  }
 };

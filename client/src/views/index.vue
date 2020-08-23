@@ -16,11 +16,6 @@
       >
         Join
       </button>
-      <button
-        class="room__copy"
-      >
-        <img src="../assets/copy.svg" alt="copy"/>
-      </button>
     </div>
     <input
       class="username"
@@ -93,6 +88,7 @@
         <button @click="onSendClick()">Send</button>
       </div>
     </div> -->
+    <welcome-popup />
   </div>
 </template>
 <script src="./index.js"></script>
