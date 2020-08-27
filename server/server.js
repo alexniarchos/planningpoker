@@ -1,5 +1,6 @@
-const express = require('express');
-const app = express();
+const expressApp = require('express')();
+const https = require('https');
+const fs = require('fs');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const {
@@ -13,10 +14,14 @@ const {
 const {getRoom, setRoom, rooms} = require('./rooms');
 
 dotenv.config();
-app.use(cors());
+expressApp.use(cors());
 
-const server = app.listen(process.env.SOCKET_PORT);
-const io = require('socket.io').listen(server);
+const server = https.createServer({
+  key: fs.readFileSync('/etc/letsencrypt/live/planning-poker.alexniarchos.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/planning-poker.alexniarchos.com/cert.pem'),
+  ca: fs.readFileSync('/etc/letsencrypt/live/planning-poker.alexniarchos.com/chain.pem')
+}, expressApp);
+const io = require('socket.io')(server);
 
 setInterval(() => {
   console.log('\nusers', getAllUsers());
@@ -126,3 +131,5 @@ io.on('connection', socket => {
     });
   })
 })
+
+server.listen(process.env.SOCKET_PORT);
