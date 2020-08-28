@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import {mapState} from 'vuex';
 import WelcomePopup from '../components/WelcomePopup/WelcomePopup.vue';
 
-const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`);
+const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`, {secure: true});
 const TABLE_RADIUS = 210;
 
 export default {

@@ -17,9 +17,9 @@ dotenv.config();
 expressApp.use(cors());
 
 const server = https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/planning-poker.alexniarchos.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/planning-poker.alexniarchos.com/cert.pem'),
-  ca: fs.readFileSync('/etc/letsencrypt/live/planning-poker.alexniarchos.com/chain.pem')
+  key: fs.readFileSync(process.env.SSL_KEY),
+  cert: fs.readFileSync(process.env.SSL_CERT),
+  ca: fs.readFileSync(process.env.SSL_CA)
 }, expressApp);
 const io = require('socket.io')(server);
 
