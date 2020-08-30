@@ -19,7 +19,8 @@ export default {
       chatInput: '',
       chatMessages: [],
       revealVotes: false,
-      cardsVisible: true
+      cardsVisible: true,
+      usernameFocused: false
     };
   },
   mounted() {
@@ -163,6 +164,13 @@ export default {
       socket.emit('changeName', this.userName);
       this.$store.commit('setName', this.userName);
       localStorage.setItem('name', this.userName);
+    },
+    onUserNameClick() {
+      this.usernameFocused = true;
+      console.log(this.$refs['username-input']);
+      this.$nextTick(() => {
+        this.$refs['username-input'].focus();
+      })
     },
     getUserInitials(name) {
       const nameSplit = name.toUpperCase().split(' ');

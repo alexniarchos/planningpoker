@@ -1,5 +1,6 @@
 const expressApp = require('express')();
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -16,11 +17,17 @@ const {getRoom, setRoom, rooms} = require('./rooms');
 dotenv.config();
 expressApp.use(cors());
 
-const server = https.createServer({
-  key: fs.readFileSync(process.env.SSL_KEY),
-  cert: fs.readFileSync(process.env.SSL_CERT),
-  ca: fs.readFileSync(process.env.SSL_CA)
-}, expressApp);
+let server;
+if (process.env.isTest) {
+  server = http.createServer({}, expressApp);
+} else {
+  server = https.createServer({
+    key: fs.readFileSync(process.env.SSL_KEY),
+    cert: fs.readFileSync(process.env.SSL_CERT),
+    ca: fs.readFileSync(process.env.SSL_CA)
+  }, expressApp);
+}
+
 const io = require('socket.io')(server);
 
 setInterval(() => {

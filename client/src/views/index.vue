@@ -3,7 +3,7 @@
     <div class="room">
       <span class="room__label">Room:</span>
       <input
-        class="room__number"
+        class="room__id"
         v-model="newRoomId"
         @keyup.enter="onRoomChange()"
         placeholder="room id"
@@ -17,12 +17,21 @@
         Join
       </button>
     </div>
-    <input
+    <div
+      v-show="!usernameFocused"
       class="username"
-      v-model="newUserName"
       @keyup.enter="onUserNameChange()"
       placeholder="username"
-      :style="userNameWidth"
+      @click="onUserNameClick()"
+    >
+      {{newUserName}}
+    </div>
+    <input
+      v-show="usernameFocused"
+      ref="username-input"
+      class="username__input"
+      v-model="newUserName"
+      @blur="usernameFocused = false"
     />
     <div class="table">
       <div class="user__table-cards">
