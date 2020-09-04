@@ -2,12 +2,23 @@
   <div class="container">
     <div class="room">
       <span class="room__label">Room:</span>
+      <div
+        v-show="!roomIdFocused"
+        class="room__id-div"
+        placeholder="username"
+        @click="onRoomIdClick()"
+        ref="room__id-div"
+      >
+        {{newRoomId}}
+      </div>
       <input
-        class="room__id"
+        v-show="roomIdFocused"
+        class="room__id-input"
         v-model="newRoomId"
         @keyup.enter="onRoomChange()"
+        @blur="onRoomIdBlur()"
         placeholder="room id"
-        :style="roomIdStyle"
+        ref="room__id-input"
       />
       <button
         v-if="roomId !== newRoomId"
@@ -17,12 +28,13 @@
         Join
       </button>
     </div>
+
     <div
       v-show="!usernameFocused"
       class="username"
-      @keyup.enter="onUserNameChange()"
       placeholder="username"
       @click="onUserNameClick()"
+      ref="username-div"
     >
       {{newUserName}}
     </div>
@@ -31,8 +43,10 @@
       ref="username-input"
       class="username__input"
       v-model="newUserName"
-      @blur="usernameFocused = false"
+      @keyup.enter="onUserNameChange()"
+      @blur="onUserNameBlur"
     />
+
     <div class="table">
       <div class="user__table-cards">
         <transition-group name="slide-card">

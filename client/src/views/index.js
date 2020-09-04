@@ -20,7 +20,8 @@ export default {
       chatMessages: [],
       revealVotes: false,
       cardsVisible: true,
-      usernameFocused: false
+      usernameFocused: false,
+      roomIdFocused: false
     };
   },
   mounted() {
@@ -145,6 +146,9 @@ export default {
       socket.emit('clearVotes');
     },
     onRoomChange() {
+      if (this.roomId === this.newRoomId) {
+        return;
+      }
       this.$store.commit('setRoomId', this.newRoomId);
       window.location = `/${this.roomId}`;
       socket.emit('joinRoom', {
@@ -153,6 +157,19 @@ export default {
           name: this.userName,
         },
       });
+    },
+    onRoomIdClick() {
+      const roomIdInput = this.$refs['room__id-input'];
+      const roomIdDiv = this.$refs['room__id-div'];
+      const temp = roomIdDiv.clientWidth;
+      this.roomIdFocused = true;
+      this.$nextTick(() => {
+        roomIdInput.style.width = `${temp - 16}px`;
+        roomIdInput.select();
+      });
+    },
+    onRoomIdBlur() {
+      this.roomIdFocused = false;
     },
     onUserNameChange() {
       if (this.newUserName === '') {
@@ -166,13 +183,23 @@ export default {
       localStorage.setItem('name', this.userName);
     },
     onUserNameClick() {
+      const usernameInput = this.$refs['username-input'];
+      const usernameDiv = this.$refs['username-div'];
+      const temp = usernameDiv.clientWidth;
       this.usernameFocused = true;
-      console.log(this.$refs['username-input']);
       this.$nextTick(() => {
-        this.$refs['username-input'].focus();
-      })
+        usernameInput.style.width = `${temp - 16}px`;
+        usernameInput.select();
+      });
+    },
+    onUserNameBlur() {
+      this.usernameFocused = false;
+      this.onUserNameChange();
     },
     getUserInitials(name) {
+      if (!name) {
+        return '';
+      }
       const nameSplit = name.toUpperCase().split(' ');
       const firstInitial = (nameSplit[0] && nameSplit[0].charAt(0)) || '';
       const secondInitial = (nameSplit[1] && nameSplit[1].charAt(0)) || '';
