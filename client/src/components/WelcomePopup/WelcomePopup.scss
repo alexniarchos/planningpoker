@@ -1,3 +1,14 @@
+.blur {
+  display: block;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  backdrop-filter: blur(15px);
+  background-color: rgba(0, 0, 0, .5);
+}
+
 .welcome-popup {
   position: fixed;
   display: flex;
@@ -42,6 +53,7 @@
   }
 
   button {
+    z-index: 1;
     width: 400px;
     margin: 16px auto 0 auto;
     padding: 12px;
