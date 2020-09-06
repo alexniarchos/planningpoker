@@ -10,8 +10,11 @@ export default {
   },
   methods: {
     setTooltipStyle() {
-      const tooltipWidth = this.$refs.tooltip.clientWidth;
-      console.log(this.$refs.tooltip.style);
+      this.$nextTick(() => {
+        const tooltipWidth = this.$refs.tooltip.clientWidth;
+        this.$refs.tooltip.style.left = `calc(-${tooltipWidth/2}px + 40px)`;
+        this.$refs['tooltip-arrow'].style.left = 'calc(50% - 6px';
+      });
     }
   },
   watch: {
