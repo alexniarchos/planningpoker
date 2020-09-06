@@ -43,8 +43,8 @@
       ref="username-input"
       class="username__input"
       v-model="newUserName"
-      @keyup.enter="onUserNameChange()"
-      @blur="onUserNameBlur"
+      @keyup.enter="onUserNameBlur()"
+      @blur="onUserNameBlur()"
     />
 
     <div class="table">

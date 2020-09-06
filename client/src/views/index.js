@@ -82,7 +82,7 @@ export default {
 
     socket.on('roomChangeUserName', (user) => {
       this.setUserById(user.id, {
-        name: user.name,
+        name: user.name
       });
     });
   },
@@ -116,12 +116,10 @@ export default {
     },
     setUserById(id, user) {
       const userIndex = getUserIndexById(this.users, id);
-      const {users} = this;
-      users[userIndex] = {
+      this.$set(this.users, userIndex, {
         ...this.users[userIndex],
-        ...user,
-      }
-      this.$store.commit('setUsers', users);
+        ...user
+      });
     },
     onRevealClick() {
       if (!this.revealVotes) {
