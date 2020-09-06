@@ -116,10 +116,12 @@ export default {
     },
     setUserById(id, user) {
       const userIndex = getUserIndexById(this.users, id);
-      this.$store.commit('setUsers', {
+      const {users} = this;
+      users[userIndex] = {
         ...this.users[userIndex],
         ...user,
-      });
+      }
+      this.$store.commit('setUsers', users);
     },
     onRevealClick() {
       if (!this.revealVotes) {
@@ -214,7 +216,7 @@ export default {
       return `width: ${this.newUserName.length * 12}px`;
     },
     usersHaveVoted() {
-      return this.users.filter(user => user.hasVoted);
+      return this.users && this.users.filter(user => user.hasVoted);
     }
   },
   watch: {
