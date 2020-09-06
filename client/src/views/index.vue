@@ -68,9 +68,7 @@
         <div class="user__name">
           {{getUserInitials(user.name)}}
         </div>
-        <div class="user__tooltip">
-          {{user.name}}
-        </div>
+        <tooltip class="user__tooltip" :text="user.name" />
       </div>
       <button v-if="showRevealButton" @click="onRevealClick()" class="table__cta">
         {{revealText}}

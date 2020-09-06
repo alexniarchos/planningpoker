@@ -3,6 +3,7 @@ import {mapState} from 'vuex';
 import {getUserById, getUserIndexById} from '../utils/users';
 import WelcomePopup from '../components/WelcomePopup/WelcomePopup.vue';
 import Chat from '../components/Chat/Chat.vue';
+import Tooltip from '../components/Tooltip/Tooltip.vue';
 
 const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`, {secure: true});
 const TABLE_RADIUS = 210;
@@ -10,7 +11,8 @@ const TABLE_RADIUS = 210;
 export default {
   components: {
     WelcomePopup,
-    Chat
+    Chat,
+    Tooltip
   },
   data() {
     return {
