@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     socket: null,
     name: '',
-    roomId: ''
+    roomId: '',
+    users: []
   },
   mutations: {
     setSocket(state, socket) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     setRoomId(state, roomId) {
       state.roomId = roomId;
+    },
+    setUsers(state, users) {
+      state.users = users;
     }
   },
   actions: {

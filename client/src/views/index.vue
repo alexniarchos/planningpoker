@@ -90,27 +90,7 @@
         </div>
       </div>
     </transition>
-
-    <!-- <div class="chat">
-      <div class="chat__messages">
-        <div
-          v-for="(message, index) in chatMessages"
-          class="chat__message"
-          :key="index"
-        >
-          {{getUserById(message && message.senderId).name}}: {{message.text}}
-        </div>
-      </div>
-      <div class="chat__input">
-        <input
-          type="text"
-          placeholder="Say hi!"
-          v-model="chatInput"
-          @keyup.enter="onSendClick()"
-        >
-        <button @click="onSendClick()">Send</button>
-      </div>
-    </div> -->
+    <chat />
     <welcome-popup />
   </div>
 </template>

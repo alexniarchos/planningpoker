@@ -1,23 +1,23 @@
 import io from 'socket.io-client';
 import {mapState} from 'vuex';
+import {getUserById, getUserIndexById} from '../utils/users';
 import WelcomePopup from '../components/WelcomePopup/WelcomePopup.vue';
+import Chat from '../components/Chat/Chat.vue';
 
 const socket = io(`${process.env.VUE_APP_SERVER_URL}:${process.env.VUE_APP_SOCKET_PORT}`, {secure: true});
 const TABLE_RADIUS = 210;
 
 export default {
   components: {
-    WelcomePopup
+    WelcomePopup,
+    Chat
   },
   data() {
     return {
-      users: [],
       newRoomId: '',
       newUserName: '',
       cards: [1, 2, 3, 5, 8, 13],
       selectedCardIndex: null,
-      chatInput: '',
-      chatMessages: [],
       revealVotes: false,
       cardsVisible: true,
       usernameFocused: false,
@@ -30,12 +30,8 @@ export default {
     localStorage.setItem('roomId', this.$route.params.roomId || '')
     this.$store.commit('setName', localStorage.getItem('name') || '');
 
-    socket.on('roomMessage', (message) => {
-      this.chatMessages.push(message);
-    });
-
     socket.on('roomUsers', (data) => {
-      this.users = data.users;
+      this.$store.commit('setUsers', data.users);
     });
 
     socket.on('roomRevealVotes', (userVotes) => {
@@ -75,7 +71,7 @@ export default {
 
     socket.on('roomShowVotes', (users) => {
       users.forEach((user) => {
-        if (!this.getUserById(user.id)) {
+        if (!getUserById(this.users, user.id)) {
           return;
         }
         this.setUserById(user.id, {vote: user.vote});
@@ -116,24 +112,9 @@ export default {
         vote: this.selectedCardIndex,
       });
     },
-    onSendClick() {
-      if (!this.chatInput) {
-        return;
-      }
-      socket.emit('message', {
-        message: this.chatInput,
-      });
-      this.chatInput = '';
-    },
-    getUserById(id) {
-      return this.users.find((user) => user.id === id);
-    },
-    getUserIndexById(id) {
-      return this.users.findIndex((user) => user.id === id);
-    },
     setUserById(id, user) {
-      const userIndex = this.getUserIndexById(id);
-      this.$set(this.users, userIndex, {
+      const userIndex = getUserIndexById(this.users, id);
+      this.$store.commit('setUsers', {
         ...this.users[userIndex],
         ...user,
       });
@@ -209,7 +190,8 @@ export default {
   computed: {
     ...mapState({
       name: state => state.name,
-      roomId: state => state.roomId
+      roomId: state => state.roomId,
+      users: state => state.users
     }),
     userId() {
       return socket.id;
