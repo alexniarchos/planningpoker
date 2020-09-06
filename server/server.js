@@ -4,6 +4,7 @@ const http = require('http');
 const fs = require('fs');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const sanitizeHtml = require('sanitize-html');
 const {
   userJoin,
   getUser,
@@ -37,7 +38,6 @@ setInterval(() => {
 
 io.on('connection', socket => {
   socket.on('joinRoom', ({user}) => {
-    console.log(user);
     if (getUser(socket.id)) {
       userLeave(socket.id)
     }
@@ -65,6 +65,11 @@ io.on('connection', socket => {
     if (room.showVotes) {
       io.to(user.room).emit('roomRevealVotes', getAllUsers().map(user => ({id: user.id, vote: user.vote})));
     }
+
+    io.to(user.room).emit('roomMessage', {
+      text: `Welcome <b><u>${sanitizeHtml(user.name)}</u></b> ❤️`,
+      senderId: 'Server'
+    });
   });
 
   socket.on('disconnect', () => {
@@ -84,11 +89,16 @@ io.on('connection', socket => {
   });
 
   socket.on('message', ({message}) => {
-    console.log('Received message', message, getAllUsers());
     const user = getUser(socket.id);
+
+    const sanitizedMessage = sanitizeHtml(message);
+    if (!sanitizedMessage) {
+      return;
+    }
+
     io.to(user.room).emit('roomMessage', {
-      text: message,
-      senderId: socket.id
+        text: sanitizedMessage,
+        senderId: socket.id
     });
   });
 
