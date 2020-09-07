@@ -50,18 +50,16 @@ export default {
     }
     this.currentRoomId = localStorage.getItem('roomId') || '';
 
-    this.$nextTick(() => {
-      this.socket.emit('joinRoom', {
-        user: {
-          room: this.currentRoomId,
-          name: this.currentName,
-          color: getRandomColor()
-        }
-      });
-    });
-
-
     if(this.$route.params.roomId){
+      this.$nextTick(() => {
+        this.socket.emit('joinRoom', {
+          user: {
+            room: this.currentRoomId,
+            name: this.currentName,
+            color: getRandomColor()
+          }
+        });
+      });
       this.isVisible = false;
     }
   }
