@@ -48,17 +48,6 @@
     />
 
     <div class="table">
-      <div class="user__table-cards">
-        <transition-group name="slide-card">
-          <div v-for="user in usersHaveVoted" class="user__card" :style="cardStyle(user)" :key="`${user.id}-card`">
-            <transition name="fade">
-              <div v-if="user.vote" class="user__card-number">
-                {{cards[user.vote]}}
-              </div>
-            </transition>
-          </div>
-        </transition-group>
-      </div>
       <div
         v-for="(user, index) in users"
         :class="['user', {'user--self': userId === user.id}]"
@@ -67,6 +56,13 @@
       >
         <div class="user__name">
           {{getUserInitials(user.name)}}
+        </div>
+        <div :class="['user__card', {'user__card--show': user.hasVoted}]" :style="cardStyle(user)">
+          <transition name="fade">
+            <div v-if="user.vote !== null" :class="['user__card-number', {'user__card-number--reversed': isCardNumberReversed(user)}]">
+              {{cards[user.vote]}}
+            </div>
+          </transition>
         </div>
         <tooltip class="user__tooltip" :text="user.name" />
       </div>

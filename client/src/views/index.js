@@ -98,7 +98,12 @@ export default {
     cardStyle(user) {
       const index = this.users.findIndex(u => u.id === user.id);
       const deg = index * (360 / this.users.length);
-      return `transform: rotate(${deg}deg) translateY(100px)`;
+      return `transform: rotate(${deg}deg) translateY(-100px)`;
+    },
+    isCardNumberReversed(user) {
+      const index = this.users.findIndex(u => u.id === user.id);
+      const deg = index * (360 / this.users.length);
+      return deg > 90 && deg < 270;
     },
     selectCard(index) {
       if (this.selectedCardIndex === index) {
@@ -212,9 +217,6 @@ export default {
     },
     userNameWidth() {
       return `width: ${this.newUserName.length * 12}px`;
-    },
-    usersHaveVoted() {
-      return this.users && this.users.filter(user => user.hasVoted);
     }
   },
   watch: {
