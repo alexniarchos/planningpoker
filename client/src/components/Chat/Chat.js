@@ -31,11 +31,18 @@ export default {
       }
       const user = getUserById(this.users, message && message.senderId);
       return user && user.name || 'Anonymous';
+    },
+    usernameStyle(userId) {
+      if(userId === 'Server') {
+        return '';
+      }
+      const user = getUserById(this.users, userId);
+      return `background-color: ${user.color}`;
     }
   },
   mounted() {
     this.$nextTick(() => {
-      this.socket.on('roomMessage', (message) => {
+      this.socket.on('roomMessage', message => {
         this.chatMessages.push(message);
       });
     });

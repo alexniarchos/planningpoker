@@ -6,7 +6,13 @@
         class="chat__message"
         :key="index"
       >
-        <span :class="['chat__message-user', {'chat__message-user--important': message.senderId === 'Server'}]">
+        <span 
+          :class="[
+            'chat__message-user', 
+            {'chat__message-user--important': message.senderId === 'Server'}
+          ]"
+          :style="usernameStyle(message.senderId)"
+        >
           {{formatUsername(message)}}
         </span>
         <span class="chat__message-text" v-html="message.text" />
