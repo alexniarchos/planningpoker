@@ -1,7 +1,6 @@
-/* eslint-disable import/prefer-default-export */
-
 const colors = {
   purple: '#a682ff',
+  lightPurple: '#9d4edd',
   slateBlue: '#715AFF',
   cornflowerBlue: '#5887ff',
   mayaBlue: '#55c1ff',
@@ -10,7 +9,10 @@ const colors = {
   nightBlue: '#028090',
   tealBlue: '#00A896',
   parrotGreen: '#02C39A',
-  anise: '#F0F3BD'
+  lightGreen: '#90be6d',
+  red: '#E63946',
+  navyBlue: '#1D3557',
+  veryDarkBlue: '#0d1b2a'
 };
 
 function getRandomColor() {
