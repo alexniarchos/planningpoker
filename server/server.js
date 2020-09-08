@@ -67,8 +67,8 @@ io.on('connection', socket => {
     }
 
     io.to(user.room).emit('roomMessage', {
-      text: `Welcome <b><u>${sanitizeHtml(user.name)}</u></b> ❤️`,
-      senderId: 'Server'
+      senderId: 'Server',
+      text: `Welcome <b><u>${sanitizeHtml(user.name)}</u></b> ❤️`
     });
   });
 
@@ -76,10 +76,10 @@ io.on('connection', socket => {
     const user = userLeave(socket.id);
 
     if (user) {
-      io.to(user.room).emit(
-        'roomMessage',
-        console.log(`${user.name} has left the room`)
-      );
+      io.to(user.room).emit('roomMessage', {
+        senderId: 'Server',
+        text: `Goodbye <b><u>${sanitizeHtml(user.name)}</u></b> 👋`
+      });
 
       io.to(user.room).emit('roomUsers', {
         room: user.room,
