@@ -6,6 +6,7 @@ export default {
     return {
       chatInput: '',
       chatMessages: [],
+      isChatOpen: true
     };
   },
   computed: {
