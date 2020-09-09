@@ -121,6 +121,31 @@ io.on('connection', socket => {
 
     io.to(user.room).emit('roomRevealVotes', getAllUsers().map(user => ({id: user.id, vote: user.vote})));
     setRoom(user.room, {showVotes: true});
+
+    const votes = getAllUsers().map(user => user.vote);
+    const votesCounter = {};
+    votes.forEach(vote => votesCounter[vote] = (votesCounter[vote] || 0) + 1);
+    votes.sort((a,b) => votesCounter[b] - votesCounter[a]);
+    const totalVotes = votes.length;
+    let text = '<u><b>Vote Results</b></u> 🎉<br>';
+
+    for (let vote of Object.keys(votesCounter)){
+      if(votesCounter[vote] > 0) {
+        if(vote === 'null' || vote === 'undefined') {
+          text += `<br><b>Didn't vote</b> - ${votesCounter[vote]} vote(s) (${(votesCounter[vote]/totalVotes).toFixed(2) * 100}%)`
+        }
+        else {
+          text += `<br>Card <b>[${vote}]</b> - ${votesCounter[vote]} vote(s) (${(votesCounter[vote]/totalVotes).toFixed(2) * 100}%)`;
+        }
+      }
+      else {
+        break;
+      }
+    }
+    io.to(user.room).emit('roomMessage', {
+      senderId: 'Server',
+      text
+    });
   });
 
   socket.on('clearVotes', () => {

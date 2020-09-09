@@ -18,7 +18,7 @@ export default {
     return {
       newRoomId: '',
       newUserName: '',
-      cards: [1, 2, 3, 5, 8, 13],
+      cards: ['0', '1/2', '1', '2', '3', '5', '8', '13', '20', '40', '100', '∞', '☕', '?'],
       selectedCardIndex: null,
       revealVotes: false,
       cardsVisible: true,
@@ -116,7 +116,7 @@ export default {
 
       this.selectedCardIndex = index;
       socket.emit('vote', {
-        vote: this.selectedCardIndex,
+        vote: this.cards[index],
       });
     },
     setUserById(id, user) {

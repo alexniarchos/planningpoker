@@ -60,7 +60,7 @@
         <div :class="['user__card', {'user__card--show': user.hasVoted}]" :style="cardStyle(user)">
           <transition name="fade">
             <div v-if="user.vote !== null" :class="['user__card-number', {'user__card-number--reversed': isCardNumberReversed(user)}]">
-              {{cards[user.vote]}}
+              {{user.vote}}
             </div>
           </transition>
         </div>
