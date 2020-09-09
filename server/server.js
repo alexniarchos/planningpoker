@@ -127,15 +127,16 @@ io.on('connection', socket => {
     votes.forEach(vote => votesCounter[vote] = (votesCounter[vote] || 0) + 1);
     votes.sort((a,b) => votesCounter[b] - votesCounter[a]);
     const totalVotes = votes.length;
-    let text = '<u><b>Vote Results</b></u> 🎉<br>';
+    let text = '<b>Vote Results</b> 🎉<br>';
 
     for (let vote of Object.keys(votesCounter)){
-      if(votesCounter[vote] > 0) {
+      if (votesCounter[vote] > 0) {
+        const votesText = votesCounter[vote] > 1 ? 'votes' : 'vote';
         if(vote === 'null' || vote === 'undefined') {
-          text += `<br><b>Didn't vote</b> - ${votesCounter[vote]} vote(s) (${(votesCounter[vote]/totalVotes).toFixed(2) * 100}%)`
+          text += `<br><b>Didn't vote</b> - ${votesCounter[vote]} ${votesText} (${(votesCounter[vote]/totalVotes).toFixed(2) * 100}%)`
         }
         else {
-          text += `<br>Card <b>[${vote}]</b> - ${votesCounter[vote]} vote(s) (${(votesCounter[vote]/totalVotes).toFixed(2) * 100}%)`;
+          text += `<br>Card <b>[ ${vote} ]</b> - ${votesCounter[vote]} ${votesText} (${(votesCounter[vote]/totalVotes).toFixed(2) * 100}%)`;
         }
       }
       else {
