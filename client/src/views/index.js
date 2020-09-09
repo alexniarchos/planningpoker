@@ -16,6 +16,7 @@ export default {
   },
   data() {
     return {
+      time: '',
       newRoomId: '',
       newUserName: '',
       cards: ['0', '1/2', '1', '2', '3', '5', '8', '13', '20', '40', '100', '∞', '☕', '?'],
@@ -31,6 +32,9 @@ export default {
     this.$store.commit('setRoomId', this.$route.params.roomId || '');
     localStorage.setItem('roomId', this.$route.params.roomId || '')
     this.$store.commit('setName', localStorage.getItem('name') || '');
+
+    this.setTime();
+    setInterval(() => this.setTime(), 1000);
 
     socket.on('roomUsers', (data) => {
       this.$store.commit('setUsers', data.users);
@@ -87,6 +91,17 @@ export default {
     });
   },
   methods: {
+    setTime() {
+      function concatZero(timeFrame) {
+        return timeFrame < 10 ? '0'.concat(timeFrame) : timeFrame
+      }
+
+      const date = new Date();
+      const minutes = date.getMinutes();
+      const hours = date.getHours();
+
+      this.time = `${concatZero((hours % 12) || 12)}:${concatZero(minutes)}`;
+    },
     userIconStyle(user, index) {
       const deg = (index * (360 / this.users.length)) * Math.PI/180;
       const x = -1 * TABLE_RADIUS * Math.sin(deg);

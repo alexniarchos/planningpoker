@@ -26,6 +26,46 @@ input {
   opacity: 0;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: black;
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-size: 24px;
+  color: white;
+  text-decoration: none;
+
+  span {
+    margin-left: 8px;
+  }
+}
+
+.time {
+  position: absolute;
+  width: fit-content;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  padding: 8px;
+  font-size: 24px;
+  color: white;
+  background: #383838;
+  z-index: 1;
+}
+
 .username {
   position: absolute;
   display: flex;
@@ -72,7 +112,7 @@ input {
   position: absolute;
   display: flex;
   align-items: center;
-  top: 16px;
+  top: 100px;
   left: 16px;
   font-size: 24px;
   color: white;

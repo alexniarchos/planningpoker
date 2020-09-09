@@ -1,5 +1,12 @@
 <template>
   <div class="container">
+    <a href="https://planning-poker.alexniarchos.com" class="brand">
+      <div class="logo">PP</div>
+      <span>Planning Poker</span>
+    </a>
+    <div class="time">
+      {{time}}
+    </div>
     <div class="room">
       <span class="room__label">Room:</span>
       <div
@@ -23,7 +30,7 @@
       <button
         v-if="roomId !== newRoomId"
         class="room__join"
-        @click="onRoomChange()"
+        @mousedown="onRoomChange()"
       >
         Join
       </button>
