@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a href="https://planning-poker.alexniarchos.com" class="brand">
+    <a href="/" class="brand">
       <div class="logo">PP</div>
       <span>Planning Poker</span>
     </a>
