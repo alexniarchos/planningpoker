@@ -38,7 +38,9 @@ export default {
         }
       });
 
-      this.$router.push(`/${this.currentRoomId}`);
+      if(this.$route.params.roomId !== this.currentRoomId){
+        this.$router.push(`/${this.currentRoomId}`);
+      }
       this.isVisible = false;
     }
   },
@@ -48,9 +50,9 @@ export default {
       this.currentName = name;
       this.$store.commit('setName', name);
     }
-    this.currentRoomId = localStorage.getItem('roomId') || '';
+    this.currentRoomId = this.$route.params.roomId || localStorage.getItem('roomId') || '';
 
-    if(this.$route.params.roomId){
+    if(this.$route.params.roomId && name){
       this.$nextTick(() => {
         this.socket.emit('joinRoom', {
           user: {
