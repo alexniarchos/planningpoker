@@ -53,6 +53,13 @@ export default {
       this.$nextTick(() => {
         this.$refs['chat-messages'].scrollTop = this.$refs['chat-messages'].scrollHeight;
       })
+    },
+    isChatOpen(val) {
+      if(val){
+        this.$nextTick(() => {
+          this.$refs['chat-messages'].scrollTop = this.$refs['chat-messages'].scrollHeight;
+        })
+      }
     }
   }
 }
