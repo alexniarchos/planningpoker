@@ -14,4 +14,3 @@ git fetch
 git pull --rebase
 npm i
 npm run build
-service nginx restart
