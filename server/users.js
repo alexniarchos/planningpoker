@@ -1,19 +1,23 @@
-const {setRoom, getRoom, getRoomIndex, rooms} = require('./rooms');
+const {getRoom, getRoomIndex, createRoom, removeRoom, rooms} = require('./rooms');
+const {insertUser, deleteUser, updateUser, insertRoom} = require('./db');
 
 const users = [];
 
-// Join user to chat
 function userJoin(id, user) {
   const userWithId = {id, ...user};
   const {room} = user; 
 
   users.push(userWithId);
   if (!getRoom(room)) {
-    setRoom(room, {
+    const newRoom = {
       id: room,
       showVotes: false
-    });
+    };
+
+    createRoom(room, newRoom);
   }
+
+  insertUser(id, user);
 
   return user;
 }
@@ -32,9 +36,10 @@ function setUser(id, user) {
     ...users[userIndex],
     ...user
   };
+
+  updateUser(id, user);
 } 
 
-// User leaves chat
 function userLeave(id) {
   const index = users.findIndex(user => user.id === id);
   if (index === -1) {
@@ -42,16 +47,18 @@ function userLeave(id) {
   }
 
   const roomIndex = getRoomIndex(users[index].room);
+  // last user left so delete the room
   if (roomIndex !== -1 && getRoomUsers(users[index].room).length === 1) {
+    removeRoom(users[index].room);
     rooms.splice(roomIndex, 1);
   }
 
   if (index !== -1) {
+    deleteUser(id);
     return users.splice(index, 1)[0];
   }
 }
 
-// Get room users
 function getRoomUsers(room) {
   return users.filter(user => user.room === room);
 }
