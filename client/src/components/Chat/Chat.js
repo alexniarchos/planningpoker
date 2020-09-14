@@ -46,6 +46,10 @@ export default {
       this.socket.on('roomMessage', message => {
         this.chatMessages.push(message);
       });
+
+      this.socket.on('roomMessages', messages => {
+        this.chatMessages = messages;
+      });
     });
   },
   watch: {

@@ -14,6 +14,7 @@ const {
   getAllUsers
 } = require('./users');
 const {getRoom, setRoom, rooms} = require('./rooms');
+const {initDB} = require('./db');
 
 dotenv.config();
 expressApp.use(cors());
@@ -30,6 +31,8 @@ if (process.env.isTest) {
 }
 
 const io = require('socket.io')(server);
+
+initDB();
 
 setInterval(() => {
   console.log('\nusers', getAllUsers());
@@ -66,21 +69,29 @@ io.on('connection', socket => {
       io.to(user.room).emit('roomRevealVotes', getAllUsers().map(user => ({id: user.id, vote: user.vote})));
     }
 
-    io.to(user.room).emit('roomMessage', {
+    const {messages = []} = getRoom(user.room);
+    messages.push({
       senderId: 'Server',
       text: `Welcome <b><u>${sanitizeHtml(user.name)}</u></b> ❤️`
     });
+    setRoom(user.room, {messages});
+
+    io.to(user.room).emit('roomMessages', messages);
   });
 
   socket.on('disconnect', () => {
     const user = userLeave(socket.id);
 
-    if (user) {
-      io.to(user.room).emit('roomMessage', {
+    if (user && rooms.length > 0) {
+      const message = {
         senderId: 'Server',
         text: `Goodbye <b><u>${sanitizeHtml(user.name)}</u></b> 👋`
-      });
+      };
+      const {messages = []} = getRoom(user.room);
+      messages.push(message);
+      setRoom(user.room, {message});
 
+      io.to(user.room).emit('roomMessage', message);
       io.to(user.room).emit('roomUsers', {
         room: user.room,
         users: getRoomUsers(user.room)
@@ -88,18 +99,24 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('message', ({message}) => {
+  socket.on('message', ({message: text}) => {
     const user = getUser(socket.id);
 
-    const sanitizedMessage = sanitizeHtml(message);
+    const sanitizedMessage = sanitizeHtml(text);
     if (!sanitizedMessage) {
       return;
     }
 
-    io.to(user.room).emit('roomMessage', {
-        text: sanitizedMessage,
-        senderId: socket.id
-    });
+    const message = {
+      text: sanitizedMessage,
+      senderId: socket.id
+    };
+
+    const {messages = []} = getRoom(user.room);
+    messages.push(message);
+    setRoom(user.room, {messages});
+
+    io.to(user.room).emit('roomMessage', message);
   });
 
   socket.on('vote', ({vote}) => {
@@ -118,9 +135,6 @@ io.on('connection', socket => {
 
   socket.on('showVotes', () => {
     const user = getUser(socket.id);
-
-    io.to(user.room).emit('roomRevealVotes', getAllUsers().map(user => ({id: user.id, vote: user.vote})));
-    setRoom(user.room, {showVotes: true});
 
     const votes = getAllUsers().map(user => user.vote);
     const votesCounter = {};
@@ -143,10 +157,17 @@ io.on('connection', socket => {
         break;
       }
     }
-    io.to(user.room).emit('roomMessage', {
+
+    const {messages = []} = getRoom(user.room);
+    const message = {
       senderId: 'Server',
       text
-    });
+    };
+    messages.push(message);
+    setRoom(user.room, {showVotes: true, messages});
+
+    io.to(user.room).emit('roomRevealVotes', getAllUsers().map(user => ({id: user.id, vote: user.vote})));
+    io.to(user.room).emit('roomMessage', message);
   });
 
   socket.on('clearVotes', () => {
