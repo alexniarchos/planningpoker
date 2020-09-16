@@ -38,7 +38,7 @@ export default {
         return '';
       }
       const user = getUserById(this.users, userId);
-      return `background-color: ${user.color}`;
+      return user ? `background-color: ${user.color}` : `background-color: black`;
     }
   },
   mounted() {

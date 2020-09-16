@@ -89,7 +89,7 @@ io.on('connection', socket => {
       };
       const {messages = []} = getRoom(user.room);
       messages.push(message);
-      setRoom(user.room, {message});
+      setRoom(user.room, {messages});
 
       io.to(user.room).emit('roomMessage', message);
       io.to(user.room).emit('roomUsers', {
