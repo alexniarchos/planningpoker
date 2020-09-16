@@ -10,6 +10,7 @@ then
 else
     git checkout master
 fi
+git reset --hard
 git pull --rebase
 npm i
 pm2 restart server
@@ -23,6 +24,7 @@ then
 else
     git checkout master
 fi
+git reset --hard
 git pull --rebase
 npm i
 npm run build
