@@ -93,6 +93,9 @@
     </transition>
     <chat />
     <welcome-popup />
+    <a :href="`https://github.com/alexniarchos/planningpoker/commit/${gitHash}`" class="version-hash">
+      {{gitHash}}
+    </a>
   </div>
 </template>
 <script src="./index.js"></script>

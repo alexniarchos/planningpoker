@@ -16,6 +16,7 @@ export default {
   },
   data() {
     return {
+      gitHash: process.env.VUE_APP_GIT_HASH,
       time: '',
       newRoomId: '',
       newUserName: '',
