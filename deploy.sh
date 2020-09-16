@@ -7,6 +7,8 @@ git fetch
 if [ ! -z $1 ]
 then
     git checkout $1
+else
+    git checkout master
 fi
 git pull --rebase
 npm i
@@ -18,6 +20,8 @@ git fetch
 if [ ! -z $1 ]
 then
     git checkout $1
+else
+    git checkout master
 fi
 git pull --rebase
 npm i
