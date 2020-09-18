@@ -94,10 +94,10 @@
     <chat />
     <welcome-popup />
     <div class="github">
-      <a href="https://github.com/alexniarchos/planningpoker">
+      <a href="https://github.com/alexniarchos/planningpoker" target="_blank">
         <img src="../assets/github.svg" alt="github logo">
       </a>
-      <a :href="`https://github.com/alexniarchos/planningpoker/commit/${gitHash}`" >
+      <a :href="`https://github.com/alexniarchos/planningpoker/commit/${gitHash}`" target="_blank">
         {{gitHash}}
       </a>
     </div>
