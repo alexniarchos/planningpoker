@@ -4,7 +4,9 @@ const http = require('http');
 const fs = require('fs');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path'); 
 const sanitizeHtml = require('sanitize-html');
+
 const {
   userJoin,
   getUser,
@@ -16,7 +18,7 @@ const {
 const {getRoom, setRoom, rooms} = require('./rooms');
 const {initDB} = require('./db');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 expressApp.use(cors());
 
 let server;
