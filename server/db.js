@@ -3,16 +3,23 @@ const mongoClient = require('mongodb').MongoClient;
 let db;
 
 function initDB() {
-  mongoClient.connect("mongodb://localhost:27017/planningPokerDB", {useUnifiedTopology: true}, function (err, client) {
+  mongoClient.connect("mongodb://localhost:27017/planningPokerDB", {useUnifiedTopology: true}, async function (err, client) {
     if (err) {
       console.log(err);
       process.exit(1);
     }
 
     db = client.db();
+
     // clear collections
-    db.collection('users').drop();
-    db.collection('rooms').drop();
+    const collections = await db.collections();
+    if(collections.map(c => c && c.s.namespace.collection).includes('users')) {
+      db.collection('users').drop();
+    }
+    if(collections.map(c => c && c.s.namespace.collection).includes('rooms')) {
+      db.collection('rooms').drop();
+    }
+
     console.log("Database connection ready");
   });
 }
