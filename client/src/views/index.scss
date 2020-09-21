@@ -327,17 +327,17 @@ $user-size: 80px;
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -70px;
+  bottom: -64px;
   display: flex;
   justify-content: center;
   margin: 0 auto;
   width: 900px;
-  padding: 20px 0;
+  padding: 32px 0 16px 0;
   transition: transform 0.3s ease;
   z-index: 1;
 
   &:hover {
-    transform: translateY(-70px);
+    transform: translateY(-64px);
     z-index: 1;
   }
 
@@ -355,7 +355,7 @@ $user-size: 80px;
     transition: transform 0.3s ease;
 
     &:hover {
-      transform: translateY(-20px);
+      transform: translateY(-8px);
     }
   
     &+& {
@@ -367,7 +367,7 @@ $user-size: 80px;
     }
   
     &--selected {
-      transform: translateY(-20px);
+      transform: translateY(-8px);
       border-color: black;
       opacity: 1;
     }

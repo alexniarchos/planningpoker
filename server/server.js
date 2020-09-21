@@ -149,7 +149,7 @@ io.on('connection', socket => {
     uniqueVotes.forEach(vote => {
       if (votesCounter[vote] > 0) {
         const votesText = votesCounter[vote] > 1 ? 'votes' : 'vote';
-        if(vote === 'null' || vote === 'undefined') {
+        if(!vote) {
           text += `<br><b>Didn't vote</b> - ${votesCounter[vote]} ${votesText} (${(Math.trunc((votesCounter[vote]/totalVotes) * 100))}%)`
         }
         else {
