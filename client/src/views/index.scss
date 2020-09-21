@@ -334,11 +334,10 @@ $user-size: 80px;
   width: 900px;
   padding: 32px 0 16px 0;
   transition: transform 0.3s ease;
-  z-index: 1;
+  z-index: 200;
 
   &:hover {
     transform: translateY(-64px);
-    z-index: 1;
   }
 
   &__card {

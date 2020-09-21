@@ -107,9 +107,11 @@ export default {
       const deg = (index * (360 / this.users.length)) * Math.PI/180;
       const x = -1 * TABLE_RADIUS * Math.sin(deg);
       const y = TABLE_RADIUS * Math.cos(deg);
+      const zIndex = Math.round(Math.abs((index + 1) - this.users.length/2));
       return `transform: translateX(${x}px) translateY(${y}px);
               background-color: ${user.color};
-              border-color: ${user.color}`;
+              border-color: ${user.color};
+              z-index: ${zIndex}`;
     },
     cardStyle(user) {
       const index = this.users.findIndex(u => u.id === user.id);
