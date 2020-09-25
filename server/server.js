@@ -43,6 +43,12 @@ setInterval(() => {
 
 io.on('connection', socket => {
   socket.on('joinRoom', ({user}) => {
+    user = {
+      ...user,
+      hasVoted: false,
+      vote: null
+    };
+
     if (getUser(socket.id)) {
       userLeave(socket.id)
     }
