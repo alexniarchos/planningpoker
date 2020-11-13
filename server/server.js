@@ -32,7 +32,11 @@ if (process.env.isTest) {
   }, expressApp);
 }
 
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: true
+  }
+});
 
 initDB();
 
