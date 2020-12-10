@@ -30,12 +30,26 @@ export default {
   },
   mounted() {
     this.$store.commit('setSocket', socket);
-    this.$store.commit('setRoomId', this.$route.params.roomId || '');
-    localStorage.setItem('roomId', this.$route.params.roomId || '')
+    const roomId = this.$route.params.roomId || '';
+    const shortRoomId = roomId.substring(0, 20);
+
+    if (shortRoomId !== roomId) {
+      this.$router.push(`/${roomId}`);
+    }
+
+    this.$store.commit('setRoomId', shortRoomId || '');
+    localStorage.setItem('roomId', shortRoomId || '')
     this.$store.commit('setName', localStorage.getItem('name') || '');
 
     this.setTime();
     setInterval(() => this.setTime(), 1000);
+
+    this.$nextTick(() => {
+      this.userName = this.name;
+      this.newUserName = this.name;
+
+      this.newRoomId = this.roomId;
+    });
 
     socket.on('roomUsers', (data) => {
       this.$store.commit('setUsers', data.users);
@@ -152,10 +166,11 @@ export default {
       socket.emit('clearVotes');
     },
     onRoomChange() {
-      if (this.roomId === this.newRoomId) {
+      if (!this.newRoomId || this.roomId === this.newRoomId) {
+        this.newRoomId = this.roomId;
         return;
       }
-      this.$store.commit('setRoomId', this.newRoomId);
+      this.$store.commit('setRoomId', this.newRoomId.trim());
       window.location = `/${this.roomId}`;
       socket.emit('joinRoom', {
         user: {
@@ -175,14 +190,18 @@ export default {
       });
     },
     onRoomIdBlur() {
+      if (!this.newRoomId) {
+        this.newRoomId = this.roomId;
+      }
       this.roomIdFocused = false;
     },
     onUserNameChange() {
-      if (this.newUserName === '') {
+      if (!this.newUserName) {
         this.newUserName = this.userName;
         return;
       }
 
+      this.newUserName = this.newUserName.trim();
       this.userName = this.newUserName;
       socket.emit('changeName', this.userName);
       this.$store.commit('setName', this.userName);
@@ -201,6 +220,12 @@ export default {
     onUserNameBlur() {
       this.usernameFocused = false;
       this.onUserNameChange();
+    },
+    onWelcomeSubmit() {
+      this.userName = this.name;
+      this.newUserName = this.name;
+
+      this.newRoomId = this.roomId;
     },
     getUserInitials(name) {
       if (!name) {
@@ -235,14 +260,6 @@ export default {
     },
     userNameWidth() {
       return `width: ${this.newUserName.length * 12}px`;
-    }
-  },
-  watch: {
-    name(val) {
-      this.newUserName = val;
-    },
-    roomId(val) {
-      this.newRoomId = val;
     }
   }
 };

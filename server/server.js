@@ -93,22 +93,29 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     const user = userLeave(socket.id);
-
-    if (user && rooms.length > 0) {
-      const message = {
-        senderId: 'Server',
-        text: `Goodbye <b><u>${sanitizeHtml(user.name)}</u></b> 👋`
-      };
-      const {messages = []} = getRoom(user.room);
-      messages.push(message);
-      setRoom(user.room, {messages});
-
-      io.to(user.room).emit('roomMessage', message);
-      io.to(user.room).emit('roomUsers', {
-        room: user.room,
-        users: getRoomUsers(user.room)
-      });
+    if (!user){
+      return;
     }
+
+    const usersRoom = getRoom(user.room);
+
+    if (!usersRoom) {
+      return;
+    }
+
+    const message = {
+      senderId: 'Server',
+      text: `Goodbye <b><u>${sanitizeHtml(user.name)}</u></b> 👋`
+    };
+    const {messages = []} = usersRoom;
+    messages.push(message);
+    setRoom(user.room, {messages});
+
+    io.to(user.room).emit('roomMessage', message);
+    io.to(user.room).emit('roomUsers', {
+      room: user.room,
+      users: getRoomUsers(user.room)
+    });
   });
 
   socket.on('message', ({message: text}) => {
@@ -133,6 +140,11 @@ io.on('connection', socket => {
 
   socket.on('vote', ({vote}) => {
     const user = getUser(socket.id);
+
+    if (!user) {
+      console.error('Could not find user with socket.id: ', socket.id);
+      return;
+    }
 
     setUser(socket.id, {
       vote,

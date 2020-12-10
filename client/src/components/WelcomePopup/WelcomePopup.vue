@@ -7,12 +7,14 @@
         v-model="currentName"
         class="welcome-popup__input"
         placeholder="Type your full name"
+        maxlength="20"
         @keyup.enter="onSubmit()"
       />
       <input
         v-model="currentRoomId"
         class="welcome-popup__input"
         placeholder="Type a room ID to join"
+        maxlength="20"
         @keyup.enter="onSubmit()"
       />
       <button @click="onSubmit()">Go!</button>

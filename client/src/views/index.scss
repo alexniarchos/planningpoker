@@ -109,6 +109,7 @@ input {
   &__input {
     position: absolute;
     display: flex;
+    max-width: 200px;
     align-items: center;
     top: 16px;
     right: 16px;
@@ -123,6 +124,7 @@ input {
     background-color: black;
 
     &:focus {
+      min-width: 100px;
       opacity: 1;
     }
   }
@@ -143,6 +145,7 @@ input {
 
   &__id {
     &-input {
+      max-width: 200px;
       margin-right: 8px;
       padding: 8px;
       color: white;
@@ -153,13 +156,18 @@ input {
       font-size: 18px;
       opacity: 0.7;
       transition: opacity 0.3s ease;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
   
       &:focus {
+        min-width: 100px;
         opacity: 1;
       }
     }
 
     &-div {
+      max-width: 200px;
       margin-right: 8px;
       padding: 8px;
       color: white;
@@ -170,6 +178,9 @@ input {
       font-size: 18px;
       opacity: 0.7;
       transition: opacity 0.3s ease;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     
       &:hover {
         opacity: 1;

@@ -22,6 +22,7 @@
         v-show="roomIdFocused"
         class="room__id-input"
         v-model="newRoomId"
+        maxlength="20"
         @keyup.enter="onRoomChange()"
         @blur="onRoomIdBlur()"
         placeholder="room id"
@@ -50,6 +51,7 @@
       ref="username-input"
       class="username__input"
       v-model="newUserName"
+      maxlength="20"
       @keyup.enter="onUserNameBlur()"
       @blur="onUserNameBlur()"
     />
@@ -92,7 +94,7 @@
       </div>
     </transition>
     <chat />
-    <welcome-popup />
+    <welcome-popup @submit="onWelcomeSubmit()" />
     <div class="github">
       <a href="https://github.com/alexniarchos/planningpoker" target="_blank">
         <img src="../assets/github.svg" alt="github logo">

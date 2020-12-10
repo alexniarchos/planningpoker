@@ -25,6 +25,9 @@ export default {
         this.currentRoomId = generateId(8);
       }
 
+      this.currentName = this.currentName.trim();
+      this.currentRoomId = this.currentRoomId.trim();
+
       this.$store.commit('setName', this.currentName);
       localStorage.setItem('name', this.currentName);
       this.$store.commit('setRoomId', this.currentRoomId);
@@ -42,6 +45,7 @@ export default {
         this.$router.push(`/${this.currentRoomId}`);
       }
       this.isVisible = false;
+      this.$emit('submit');
     }
   },
   mounted() {
