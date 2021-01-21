@@ -29,7 +29,7 @@
     "eslint-plugin-vue": "^7.5.0",
     "lint-staged": "^10.5.3",
     "git-describe": "^4.0.4",
-    "sass": "^1.32.0",
+    "sass": "^1.32.5",
     "sass-loader": "^10.1.0",
     "vue-template-compiler": "^2.6.12"
   },
