@@ -6,17 +6,18 @@ function initDB() {
   mongoClient.connect("mongodb://localhost:27017/planningPokerDB", {useUnifiedTopology: true}, async function (err, client) {
     if (err) {
       console.log(err);
-      process.exit(1);
     }
 
     db = client.db();
 
     // clear collections
     const collections = await db.collections();
-    if(collections.map(c => c && c.s.namespace.collection).includes('users')) {
+    const collectionsMap = collections.map(c => c && c.s.namespace.collection);
+
+    if(collectionsMap.includes('users')) {
       db.collection('users').drop();
     }
-    if(collections.map(c => c && c.s.namespace.collection).includes('rooms')) {
+    if(collectionsMap.includes('rooms')) {
       db.collection('rooms').drop();
     }
 
@@ -24,29 +25,58 @@ function initDB() {
   });
 }
 
-function insertUser(id, user) {
-  db.collection('users').insertOne({id, ...user});
+async function insertUser(id, user) {
+  try {
+    await db.collection('users').insertOne({id, ...user});
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
-function deleteUser(id) {
-  db.collection('users').deleteOne({id});
+async function deleteUser(id) {
+  try {
+    await db.collection('users').deleteOne({id});
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
-function updateUser(id, user) {
-  db.collection('users').updateOne({id}, {$set: user});
+async function updateUser(id, user) {
+  try {
+    await db.collection('users').updateOne({id}, {$set: user});
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
-function insertRoom(id, room) {
-  db.collection('rooms').insertOne({id, ...room});
+async function insertRoom(id, room) {
+  try {
+    await db.collection('rooms').insertOne({id, ...room});
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
-function deleteRoom(id) {
-  db.collection('rooms').deleteOne({id});
+async function deleteRoom(id) {
+  try {
+    await db.collection('rooms').deleteOne({id});
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
-function updateRoom(id, room) {
-  console.log(id, room);
-  db.collection('rooms').updateOne({id}, {$set: room});
+async function updateRoom(id, room) {
+  try {
+    await db.collection('rooms').updateOne({id}, {$set: room});
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
 module.exports = {

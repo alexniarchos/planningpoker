@@ -105,5 +105,5 @@
     </div>
   </div>
 </template>
-<script src="./index.js"></script>
-<style src="./index.scss" lang="scss"></style>
+<script src="./Home.js"></script>
+<style src="./Home.scss" lang="scss"></style>

@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Index from '../views/index.vue';
+import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/:roomId',
-    component: Index,
+    component: Home,
   },
   {
     path: '*',
-    component: Index
+    component: Home
   }
 ];
 
